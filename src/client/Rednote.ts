@@ -1,4 +1,4 @@
-import { Browser, DEFAULT_INTERCEPT_RESOLUTION_PRIORITY, ElementHandle } from "puppeteer";
+import { Browser, DEFAULT_INTERCEPT_RESOLUTION_PRIORITY } from "puppeteer";
 import puppeteer from "puppeteer-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
 import AdblockerPlugin from "puppeteer-extra-plugin-adblocker";
@@ -103,7 +103,7 @@ async function interactWithPosts(page: any) {
             const postSelector = `section.note-item[data-index="${postIndex}"]`;
 
             if (!(await page.$(postSelector))) {
-                console.log("No more posts found. Ending iteration...");
+                logger.info("No more posts found. Ending iteration...");
                 return;
             }
 
@@ -171,22 +171,17 @@ async function interactWithPosts(page: any) {
                 }
                 
                 if (!content && retryCount < maxRetries - 1) {
-                    console.log(`Content empty for post ${postIndex}, retrying... (${retryCount + 1}/${maxRetries})`);
                     await delay(1000);
                 }
                 retryCount++;
             }
-            
-            console.log(`Title for post ${postIndex}: ${title}`);
-            console.log(`Content for post ${postIndex}: ${content}`);
-
+       
             const imageElements = await page.$$('.note-slider-img');
             for (const imgElement of imageElements) {
                 const imgSrc = await imgElement.evaluate((el: HTMLImageElement) => el.src);
                 if (imgSrc) {
                     mediaUrls.push({ type: 'image', url: imgSrc });
                 }
-                console.log(`Found image for post ${postIndex}: ${imgSrc}`);
             }
 
             const videoElements = await page.$$('video');
@@ -195,13 +190,6 @@ async function interactWithPosts(page: any) {
                 if (videoSrc) {
                     mediaUrls.push({ type: 'video', url: videoSrc });
                 }
-                console.log(`Found video for post ${postIndex}: ${videoSrc}`);
-            }
-
-            console.log(`Found ${mediaUrls.length} media items for post ${postIndex}`);
-
-            if (!title && !content) {
-                console.log(`No title or content found for post ${postIndex}.`);
             }
 
             await page.waitForSelector('#content-textarea', { timeout: 5000 });
@@ -209,12 +197,11 @@ async function interactWithPosts(page: any) {
             const commentBox = await page.$(commentBoxSelector);
             if (commentBox) {
                 await commentBox.click();
-                console.log(`Commenting on post ${postIndex}...`);
                 const mediaDescription = mediaUrls.map(media => 
                     `${media.type === 'video' ? 'Video' : 'Image'}: ${media.url}`
                 ).join('\n');
                 const prompt = generateCommentPrompt(title, content, mediaDescription);
-                console.log(prompt)
+                logger.info(`Prompt: ${prompt}`);
                 const schema = getRednoteCommentSchema();
                 const result = await runAgent(schema, prompt);
                 const comment = result[0]?.comment;
@@ -223,32 +210,23 @@ async function interactWithPosts(page: any) {
                 await delay(5000);
                 const sendButton = await page.$('.btn.submit:not([disabled])');
                 if (sendButton) {
-                    console.log(`Posting comment on post ${postIndex}...`);
                     await sendButton.click();
-                    console.log(`Comment posted on post ${postIndex}: ${comment}.`);
-                } else {
-                    console.log("Send button not found or disabled.");
+                    logger.info(`Comment posted on post ${postIndex}: ${comment}.`);
                 }
-            } else {
-                console.log("Comment box not found.");
             }
 
             await delay(3000);
             const closeButton = await page.$('.close-circle');
             if (closeButton) {
                 await closeButton.click();
-                console.log(`Closed post ${postIndex}.`);
-            } else {
-                console.log("Close button not found.");
-            }
+            } 
 
             const waitTime = Math.floor(Math.random() * 5000) + 5000;
-            console.log(`Waiting ${waitTime / 1000} seconds before moving to the next post...`);
             await delay(waitTime);
 
             postIndex++;
         } catch (error) {
-            console.error(`Error interacting with post ${postIndex}:`, error);
+            logger.error(`Error interacting with post ${postIndex}:`, error);
             break;
         }
     }

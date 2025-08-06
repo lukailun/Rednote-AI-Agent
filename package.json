@@ -12,7 +12,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "Riona-AI-Agent is an AI-powered automation tool designed to interact with various social media platforms.",
+  "description": "Riona-AI-Agent is an AI-powered automation tool designed specifically for Rednote (Xiaohongshu) platform.",
   "dependencies": {
     "@google/generative-ai": "^0.21.0",
     "axios": "^1.8.2",
@@ -24,7 +24,6 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "helmet": "^8.0.0",
-    "instagram-private-api": "^1.46.1",
     "jsdom": "^26.0.0",
     "mammoth": "^1.9.0",
     "moment": "^2.30.1",

@@ -1,6 +1,6 @@
 {
   "name": "ArcanEdge System Agent",
-  "clients": ["Instagram", "Facebook", "LinkedIn"],
+  "clients": ["Rednote"],
   "settings": {
     "voice": {
       "model": "en_US-male-medium"

@@ -94,7 +94,7 @@ Before using the automation features, you can personalize the agent by training 
 
 ## Project Structure
 
-- **src/client**: Contains the main logic for interacting with social media platforms like Rednote.
+- **src/client**: Contains the main logic for interacting with Rednote platform.
 - **src/config**: Configuration files, including the logger setup.
 - **src/utils**: Utility functions for handling errors, cookies, data saving, etc.
 - **src/Agent**: Contains the AI agent logic and training scripts.
