@@ -1,13 +1,6 @@
-## Rednote-AI-Agent
+## Rednote AI Agent
 
-Rednote-AI-Agent is an AI-powered automation tool designed for **Rednote** to automate social media interactions such as posting, liking, and commenting. It leverages advanced AI models to generate engaging content, automate interactions, and manage Rednote accounts efficiently.
-
-Before using the automation features, you can personalize the agent by training with the following, including:
-
-- **YouTube Video URL** 🎥
-- **Audio File** 🎙️
-- **Portfolio or Website Link** 🌐
-- **File Formats Supported**: PDF, DOC, DOCX, TXT 📄
+Rednote AI Agent is an AI-powered automation tool designed for **Rednote** to automate social media interactions such as posting, liking, and commenting. It leverages advanced AI models to generate engaging content, automate interactions, and manage Rednote accounts efficiently.
 
 ## Features
 
