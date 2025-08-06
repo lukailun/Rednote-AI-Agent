@@ -18,6 +18,7 @@ puppeteer.use(
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 const XIAOHONGSHU_URL = "https://www.xiaohongshu.com/";
+const COOKIES_PATH = "./cookies/RednoteCookies.json";
 
 async function runRednote() {
     const server = new Server({ port: 8000 });
@@ -31,13 +32,11 @@ async function runRednote() {
     const page = await browser.newPage();
     await page.goto(XIAOHONGSHU_URL, { waitUntil: 'networkidle2' });
 
-    const cookiesPath = "./cookies/RednoteCookies.json";
-
     const checkCookies = await RednoteCookiesExist();
     logger.info(`Checking cookies existence: ${checkCookies}`);
 
     if (checkCookies) {
-        const cookies = await loadCookies(cookiesPath);
+        const cookies = await loadCookies(COOKIES_PATH);
         await browser.setCookie(...cookies);
         logger.info('Cookies loaded and set on the page.');
 
@@ -83,7 +82,7 @@ const loginWithQRCode = async (page: any, browser: Browser) => {
             logger.info("Login successful!");
             
             const cookies = await browser.cookies();
-            await saveCookies("./cookies/RednoteCookies.json", cookies);
+            await saveCookies(COOKIES_PATH, cookies);
         } catch (error) {
             logger.error("Login timeout. Please try again.");
             await browser.close();
