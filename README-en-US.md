@@ -11,7 +11,8 @@ Rednote AI Agent is an AI-powered automation tool designed for **Rednote** to au
 
 **Upcoming Features:**
 
-- More advanced AI features and automation capabilities.
+- Posting.
+- Liking.
 
 ## Installation
 
