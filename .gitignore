@@ -66,7 +66,6 @@ web_modules/
 .yarn-integrity
 img.js
 # dotenv environment variables file
-twitter.js
 .env
 .env.test
 .env.production

@@ -6,9 +6,7 @@ import helmet from 'helmet'; // For securing HTTP headers
 import { runRednote } from './client/Rednote';
 import logger, { setupErrorHandlers } from './config/logger';
 import { setup_HandleError } from './utils';
-import { connectDB } from './config/db';
-// import { main as twitterMain } from './client/Twitter'; //
-// import { main as githubMain } from './client/GitHub'; // 
+import { connectDB } from './config/db'; 
 
 // Set up process-level error handlers
 setupErrorHandlers();

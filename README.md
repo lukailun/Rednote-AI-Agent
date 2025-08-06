@@ -18,8 +18,7 @@ Before using the automation features, you can personalize the agent by training 
 
 **Upcoming Features:**
 
-- **Twitter Automation**: (Coming soon) Automatically tweet, retweet, and like tweets.
-- **GitHub Automation**: (Coming soon) Automatically manage repositories, issues, and pull requests.
+- More advanced AI features and automation capabilities.
 
 ## Installation
 
@@ -101,7 +100,7 @@ Before using the automation features, you can personalize the agent by training 
 - **src/Agent**: Contains the AI agent logic and training scripts.
 - **src/Agent/training**: Training scripts for the AI agent.
 - **src/schema**: Schema definitions for AI-generated content and database models.
-- **src/test**: Contains test data and scripts, such as example tweets.
+- **src/test**: Contains test data and scripts for Rednote automation.
 
 ## Logging
 
