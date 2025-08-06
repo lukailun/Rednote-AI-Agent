@@ -7,6 +7,7 @@ import logger from "../config/logger";
 import { loadCookies, RednoteCookiesExist, saveCookies } from "../utils";
 import { runAgent } from "../Agent";
 import { getRednoteCommentSchema } from "../Agent/schema";
+import { generateCommentPrompt } from "../config/prompts";
 
 puppeteer.use(StealthPlugin());
 puppeteer.use(
@@ -212,7 +213,8 @@ async function interactWithPosts(page: any) {
                 const mediaDescription = mediaUrls.map(media => 
                     `${media.type === 'video' ? 'Video' : 'Image'}: ${media.url}`
                 ).join('\n');
-                const prompt = `Craft a thoughtful, engaging, and mature reply to the following post: "${title}\n${content}". The post contains the following media: ${mediaDescription}. Ensure the reply is relevant, insightful, and adds value to the conversation. It should reflect empathy and professionalism, and avoid sounding too casual or superficial. Also it should be 300 characters or less.`;
+                const prompt = generateCommentPrompt(title, content, mediaDescription);
+                console.log(prompt)
                 const schema = getRednoteCommentSchema();
                 const result = await runAgent(schema, prompt);
                 const comment = result[0]?.comment;
