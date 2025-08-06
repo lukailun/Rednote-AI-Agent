@@ -108,46 +108,76 @@ async function interactWithPosts(page: any) {
 
             await page.click(postSelector);
             await page.waitForSelector('.interaction-container');
-            await page.waitForSelector('#detail-title');
-            await page.waitForSelector('#detail-desc');
             
-            const titleElement: ElementHandle<HTMLElement> | null = await page.$('#detail-title');
-            const contentElement: ElementHandle<HTMLElement> | null = await page.$('#detail-desc');
+            await delay(2000);
             
             let title = "";
             let content = "";
             let mediaUrls: { type: 'image' | 'video', url: string }[] = [];
             
-            if (titleElement) {
-                title = await titleElement.evaluate((el: HTMLElement) => el.innerText);
-                console.log(`Title for post ${postIndex}: ${title}`);
+            const titleSelectors = ['#detail-title', '.title', '.note-content .title'];
+            for (const selector of titleSelectors) {
+                try {
+                    const titleElement = await page.$(selector);
+                    if (titleElement) {
+                        title = await titleElement.evaluate((el: HTMLElement) => el.innerText.trim());
+                        if (title) break;
+                    }
+                } catch (error) {
+                    continue;
+                }
             }
             
-            if (contentElement) {
-                content = await contentElement.evaluate((el: HTMLElement) => {
-                    const processNode = (node: Node): string => {
-                        if (node.nodeType === Node.TEXT_NODE) {
-                            return node.textContent?.trim() || '';
-                        } else if (node.nodeType === Node.ELEMENT_NODE) {
-                            const element = node as HTMLElement;
-                            if (element.classList.contains('tag')) {
-                                return element.textContent?.trim() || '';
-                            }
-                            return Array.from(element.childNodes)
-                                .map(child => processNode(child))
-                                .filter(text => text && text.trim() !== '')
-                                .join(' ');
-                        }
-                        return '';
-                    };
+            const contentSelectors = ['#detail-desc .note-text', '.desc .note-text', '.note-content .desc .note-text', '#detail-desc'];
+            let retryCount = 0;
+            const maxRetries = 3;
+            
+            while (!content && retryCount < maxRetries) {
+                for (const selector of contentSelectors) {
+                    try {
+                        const contentElement = await page.$(selector);
+                        if (contentElement) {
+                            content = await contentElement.evaluate((el: HTMLElement) => {
+                                const processNode = (node: Node): string => {
+                                    if (node.nodeType === Node.TEXT_NODE) {
+                                        return node.textContent?.trim() || '';
+                                    } else if (node.nodeType === Node.ELEMENT_NODE) {
+                                        const element = node as HTMLElement;
+                                        if (element.classList.contains('tag')) {
+                                            return element.textContent?.trim() || '';
+                                        }
+                                        return Array.from(element.childNodes)
+                                            .map(child => processNode(child))
+                                            .filter(text => text && text.trim() !== '')
+                                            .join(' ');
+                                    }
+                                    return '';
+                                };
 
-                    return Array.from(el.childNodes)
-                        .map(node => processNode(node))
-                        .filter(text => text && text.trim() !== '')
-                        .join(' ');
-                });
-                console.log(`Content for post ${postIndex}: ${content}`);
+                                return Array.from(el.childNodes)
+                                    .map(node => processNode(node))
+                                    .filter(text => text && text.trim() !== '')
+                                    .join(' ');
+                            });
+                            
+                            if (content && content.trim()) {
+                                break;
+                            }
+                        }
+                    } catch (error) {
+                        continue;
+                    }
+                }
+                
+                if (!content && retryCount < maxRetries - 1) {
+                    console.log(`Content empty for post ${postIndex}, retrying... (${retryCount + 1}/${maxRetries})`);
+                    await delay(1000);
+                }
+                retryCount++;
             }
+            
+            console.log(`Title for post ${postIndex}: ${title}`);
+            console.log(`Content for post ${postIndex}: ${content}`);
 
             const imageElements = await page.$$('.note-slider-img');
             for (const imgElement of imageElements) {
