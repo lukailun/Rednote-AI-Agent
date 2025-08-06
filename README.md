@@ -113,6 +113,6 @@ This project is licensed under the MIT License. See the LICENSE file for details
 
 ## Acknowledgements
 
-- [Google Generative AI](https://ai.google/tools/) for providing the AI models.
+- [Google AI](https://ai.google/tools/) for providing the AI models.
 - [Puppeteer](https://github.com/puppeteer/puppeteer) for browser automation.
 - [puppeteer-extra](https://github.com/berstend/puppeteer-extra) for additional plugins and enhancements.
