@@ -41,7 +41,9 @@ async function runRednote() {
         await browser.setCookie(...cookies);
         logger.info('Cookies loaded and set on the page.');
 
-        const isLoggedIn = false; 
+        await page.reload({ waitUntil: 'networkidle2' });
+        
+        const isLoggedIn = await page.$('.reds-avatar') !== null;
         if (isLoggedIn) {
             logger.info("Login verified with cookies.");
         } else {
