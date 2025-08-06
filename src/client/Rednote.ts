@@ -31,7 +31,7 @@ async function runRednote() {
     const page = await browser.newPage();
     await page.goto(XIAOHONGSHU_URL, { waitUntil: 'networkidle2' });
 
-    const cookiesPath = "./cookies/Rednotecookies.json";
+    const cookiesPath = "./cookies/RednoteCookies.json";
 
     const checkCookies = await RednoteCookiesExist();
     logger.info(`Checking cookies existence: ${checkCookies}`);
