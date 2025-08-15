@@ -79,11 +79,11 @@ export interface UserActions {
 
 export function getUserActions(): UserActions {
     try {
-        console.log("\n=== 选择要执行的操作 ===");
+        console.log("=== 选择要执行的操作 ===");
         console.log("1. 点赞");
         console.log("2. 收藏");
         console.log("3. 评论");
-        console.log("输入数字，用逗号分隔（例如：1,2,3，输入为空时默认仅浏览）：");
+        console.log("输入数字（按回车仅浏览），用逗号分隔（例如：1,2,3）：");
         
         const answer = readlineSync.question("你的选择：");
         const choices = answer.split(',').map(s => s.trim());
@@ -110,15 +110,14 @@ export function getUserActions(): UserActions {
             }
         });
         
-        // If no valid choices, just view posts without any actions
         if (!actions.like && !actions.collect && !actions.chat) {
-            console.log("未选择任何操作 - 将仅浏览帖子，不进行任何交互");
+            console.log("未选择任何操作 - 将仅浏览，不进行任何交互");
         }
         
         console.log("\n已选择的操作：");
-        if (actions.like) console.log("✓ 点赞帖子");
-        if (actions.collect) console.log("✓ 收藏帖子");
-        if (actions.chat) console.log("✓ 评论帖子");
+        if (actions.like) console.log("✓ 点赞");
+        if (actions.collect) console.log("✓ 收藏");
+        if (actions.chat) console.log("✓ 评论");
         
         return actions;
     } catch (error) {
