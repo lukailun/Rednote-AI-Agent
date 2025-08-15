@@ -98,7 +98,6 @@ async function searchForEnglishPosts(page: any) {
         
     } catch (error) {
         logger.error("Error during search for English posts:", error);
-        // Continue execution even if search fails
     }
 }
 
@@ -137,10 +136,10 @@ async function runRednote() {
 
     await page.screenshot({ path: "logged_in.png" });
 
+    await page.goto(XIAOHONGSHU_URL);
+
     // Search for English posts after login
     await searchForEnglishPosts(page);
-
-    await page.goto(XIAOHONGSHU_URL);
 
     while (true) {
          await interactWithPosts(page);
