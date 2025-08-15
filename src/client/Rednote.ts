@@ -264,8 +264,8 @@ const interactWithPosts = async (page: Page, userActions: { like: boolean; colle
             
             if (userActions.like) {
                 try {
-                    await page.waitForSelector('.like-wrapper', { timeout: 5000 });
-                    const likeButton = await page.$('.like-wrapper');
+                    await page.waitForSelector('.interaction-container .like-wrapper', { timeout: 5000 });
+                    const likeButton = await page.$('.interaction-container .like-wrapper');
                     if (likeButton) {
                         const isLiked = await likeButton.evaluate((el: Element) => {
                             const iconElement = (el as HTMLElement).querySelector('use');
@@ -287,8 +287,8 @@ const interactWithPosts = async (page: Page, userActions: { like: boolean; colle
 
             if (userActions.collect) {
                 try {
-                    await page.waitForSelector('.collect-wrapper', { timeout: 5000 });
-                    const collectButton = await page.$('.collect-wrapper');
+                    await page.waitForSelector('.interaction-container .collect-wrapper', { timeout: 5000 });
+                    const collectButton = await page.$('.interaction-container .collect-wrapper');
                     if (collectButton) {
                         const isCollected = await collectButton.evaluate((el: Element) => {
                             const iconElement = (el as HTMLElement).querySelector('use');
@@ -310,8 +310,8 @@ const interactWithPosts = async (page: Page, userActions: { like: boolean; colle
 
             if (userActions.chat) {
                 try {
-                    await page.waitForSelector('#content-textarea', { timeout: 5000 });
-                    const commentBoxSelector = '#content-textarea';
+                    await page.waitForSelector('.interaction-container #content-textarea', { timeout: 5000 });
+                    const commentBoxSelector = '.interaction-container #content-textarea';
                     const commentBox = await page.$(commentBoxSelector);
                     if (commentBox) {
                         await commentBox.click();
