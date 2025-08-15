@@ -260,6 +260,8 @@ const interactWithPosts = async (page: Page, userActions: { like: boolean; colle
             });
             logger.info(`=== End Post ${postIndex} ===\n`);
 
+            await delay(1000);
+            
             if (userActions.like) {
                 try {
                     await page.waitForSelector('.like-wrapper', { timeout: 5000 });
