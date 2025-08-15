@@ -253,15 +253,13 @@ const interactWithPosts = async (page: Page, userActions: { like: boolean; colle
 
             if (userActions.like) {
                 try {
-                    const likeButton = await page.$('.like-wrapper .like-icon');
+                    await page.waitForSelector('.like-wrapper', { timeout: 5000 });
+                    const likeButton = await page.$('.like-wrapper');
                     if (likeButton) {
+                        // Check if already liked by looking at the icon reference
                         const isLiked = await likeButton.evaluate((el: Element) => {
-                            const wrapper = (el as HTMLElement).closest('.like-wrapper');
-                            if (wrapper) {
-                                const iconElement = wrapper.querySelector('use');
-                                return iconElement && iconElement.getAttribute('xlink:href') === '#liked';
-                            }
-                            return false;
+                            const iconElement = (el as HTMLElement).querySelector('use');
+                            return iconElement && iconElement.getAttribute('xlink:href') === '#liked';
                         });
                         
                         if (!isLiked) {
@@ -279,20 +277,21 @@ const interactWithPosts = async (page: Page, userActions: { like: boolean; colle
 
             if (userActions.collect) {
                 try {
-                    const favoriteButton = await page.$('.favorite-button, .favorite-btn, [data-action="favorite"], .collect-btn');
-                    if (favoriteButton) {
-                        const isFavorited = await favoriteButton.evaluate((el: Element) => 
-                            (el as HTMLElement).classList.contains('favorited') || 
-                            (el as HTMLElement).classList.contains('active') ||
-                            (el as HTMLElement).classList.contains('collected')
-                        );
+                    await page.waitForSelector('.collect-wrapper', { timeout: 5000 });
+                    const collectButton = await page.$('.collect-wrapper');
+                    if (collectButton) {
+                        // Check if already collected by looking at the icon reference
+                        const isCollected = await collectButton.evaluate((el: Element) => {
+                            const iconElement = (el as HTMLElement).querySelector('use');
+                            return iconElement && iconElement.getAttribute('xlink:href') === '#collected';
+                        });
                         
-                        if (!isFavorited) {
-                            await favoriteButton.click();
-                            logger.info(`Favorited post ${postIndex}`);
+                        if (!isCollected) {
+                            await collectButton.click();
+                            logger.info(`Collected post ${postIndex}`);
                             await delay(1000);
                         } else {
-                            logger.info(`Post ${postIndex} already favorited`);
+                            logger.info(`Post ${postIndex} already collected`);
                         }
                     }
                 } catch (error) {
