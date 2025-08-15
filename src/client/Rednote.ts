@@ -171,7 +171,7 @@ const searchForEnglishPosts = async (page: Page) => {
     }
 }
 
-const interactWithPosts = async (page: any) => {
+const interactWithPosts = async (page: Page) => {
     let postIndex = 0;
     const maxPosts = 50;
 
@@ -198,7 +198,7 @@ const interactWithPosts = async (page: any) => {
                 try {
                     const titleElement = await page.$(selector);
                     if (titleElement) {
-                        title = await titleElement.evaluate((el: HTMLElement) => el.innerText.trim());
+                        title = await titleElement.evaluate((el: Element) => (el as HTMLElement).innerText.trim());
                         if (title) break;
                     }
                 } catch (error) {
@@ -215,7 +215,7 @@ const interactWithPosts = async (page: any) => {
                     try {
                         const contentElement = await page.$(selector);
                         if (contentElement) {
-                            content = await contentElement.evaluate((el: HTMLElement) => {
+                            content = await contentElement.evaluate((el: Element) => {
                                 const processNode = (node: Node): string => {
                                     if (node.nodeType === Node.TEXT_NODE) {
                                         return node.textContent?.trim() || '';
@@ -255,7 +255,7 @@ const interactWithPosts = async (page: any) => {
        
             const imageElements = await page.$$('.note-slider-img');
             for (const imgElement of imageElements) {
-                const imgSrc = await imgElement.evaluate((el: HTMLImageElement) => el.src);
+                const imgSrc = await imgElement.evaluate((el: Element) => (el as HTMLImageElement).src);
                 if (imgSrc) {
                     mediaUrls.push({ type: 'image', url: imgSrc });
                 }
@@ -263,7 +263,7 @@ const interactWithPosts = async (page: any) => {
 
             const videoElements = await page.$$('video');
             for (const videoElement of videoElements) {
-                const videoSrc = await videoElement.evaluate((el: HTMLVideoElement) => el.src);
+                const videoSrc = await videoElement.evaluate((el: Element) => (el as HTMLVideoElement).src);
                 if (videoSrc) {
                     mediaUrls.push({ type: 'video', url: videoSrc });
                 }
