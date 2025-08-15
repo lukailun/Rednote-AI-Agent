@@ -79,13 +79,13 @@ export interface UserActions {
 
 export function getUserActions(): UserActions {
     try {
-        console.log("\n=== Select Actions to Perform ===");
-        console.log("1. Like posts");
-        console.log("2. Favorite posts");
-        console.log("3. Comment on posts");
-        console.log("Enter numbers separated by commas (e.g., 1,2,3 or just 1): ");
+        console.log("\n=== 选择要执行的操作 ===");
+        console.log("1. 点赞帖子");
+        console.log("2. 收藏帖子");
+        console.log("3. 评论帖子");
+        console.log("输入数字，用逗号分隔（例如：1,2,3 或只输入 1，或直接按回车仅浏览）：");
         
-        const answer = readlineSync.question("Your choice: ");
+        const answer = readlineSync.question("你的选择：");
         const choices = answer.split(',').map(s => s.trim());
         
         const actions: UserActions = {
@@ -106,35 +106,34 @@ export function getUserActions(): UserActions {
                     actions.chat = true;
                     break;
                 default:
-                    console.log(`Invalid choice: ${choice}, ignoring...`);
+                    console.log(`无效选择: ${choice}，已忽略...`);
             }
         });
         
-        // If no valid choices, default to chat only
+        // If no valid choices, just view posts without any actions
         if (!actions.like && !actions.collect && !actions.chat) {
-            console.log("No valid actions selected, defaulting to chat only");
-            actions.chat = true;
+            console.log("未选择任何操作 - 将仅浏览帖子，不进行任何交互");
         }
         
-        console.log("\nSelected actions:");
-        if (actions.like) console.log("✓ Like posts");
-        if (actions.collect) console.log("✓ Collect posts");
-        if (actions.chat) console.log("✓ Chat on posts");
+        console.log("\n已选择的操作：");
+        if (actions.like) console.log("✓ 点赞帖子");
+        if (actions.collect) console.log("✓ 收藏帖子");
+        if (actions.chat) console.log("✓ 评论帖子");
         
         return actions;
     } catch (error) {
-        console.error("Error getting user actions:", error);
+        console.error("获取用户操作时出错:", error);
         process.exit(1);
     }
 }
 
 export function getSearchKeyword(): string {
     try {
-        const searchText = readlineSync.question("\nEnter search keyword (press Enter to skip search): ");
+        const searchText = readlineSync.question("\n输入搜索关键词（按回车跳过搜索）：");
         const searchKeyword = searchText.trim();
         return searchKeyword;
     } catch (error) {
-        console.error("Error entering search keyword:", error);
+        console.error("输入搜索关键词时出错:", error);
         process.exit(1);
     }
 }
@@ -145,7 +144,7 @@ export async function startRednoteAgent(): Promise<void> {
         const searchKeyword = getSearchKeyword();
         await runRednote(searchKeyword, userActions);
     } catch (error) {
-        console.error("Error starting Rednote Agent:", error);
+        console.error("启动小红书代理时出错:", error);
         process.exit(1);
     }
 }
