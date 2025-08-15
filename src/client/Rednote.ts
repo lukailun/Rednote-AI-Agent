@@ -56,7 +56,6 @@ async function runRednote(searchKeyword: string, userActions: { like: boolean; c
 
     await page.screenshot({ path: "logged_in.png" });
 
-    // Use search keyword from program startup if provided
     if (searchKeyword) {
         logger.info(`Using search keyword: "${searchKeyword}"`);
         await searchForPosts(page, searchKeyword);
@@ -254,7 +253,7 @@ const interactWithPosts = async (page: Page, userActions: { like: boolean; colle
 
             if (userActions.like) {
                 try {
-                    const likeButton = await page.$('.like-button, .like-btn, [data-action="like"]');
+                    const likeButton = await page.$('.like-wrapper');
                     if (likeButton) {
                         const isLiked = await likeButton.evaluate((el: Element) => 
                             (el as HTMLElement).classList.contains('liked') || 
