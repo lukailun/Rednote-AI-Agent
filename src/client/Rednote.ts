@@ -98,19 +98,8 @@ const loginWithQRCode = async (page: Page, browser: Browser) => {
 const searchForEnglishPosts = async (page: Page) => {
     try {
         logger.info("Searching for English posts...");
-        
-        // Wait for search box to be available
-        await page.waitForSelector('input[placeholder*="搜索"], input[placeholder*="Search"], .search-input, #search-input', { timeout: 10000 });
-        
-        // Find and click the search input
-        const searchSelectors = [
-            'input[placeholder*="搜索"]',
-            'input[placeholder*="Search"]', 
-            '.search-input',
-            '#search-input',
-            'input[type="search"]',
-            '.search-box input'
-        ];
+        await page.waitForSelector('.search-input, #search-input', { timeout: 5000 });
+        const searchSelectors = ['.search-input', '#search-input'];
         
         let searchInput = null;
         for (const selector of searchSelectors) {
@@ -139,19 +128,12 @@ const searchForEnglishPosts = async (page: Page) => {
         logger.info("Search initiated for 'English' posts");
         await delay(1000);
         
-        // Wait for search results container
-        const resultSelectors = [
-            '.search-result',
-            '.result-list',
-            '.note-list',
-            '.post-list',
-            '[data-index]'
-        ];
+        const resultSelectors = ['.search-layout'];
         
         let resultsLoaded = false;
         for (const selector of resultSelectors) {
             try {
-                await page.waitForSelector(selector, { timeout: 5000 });
+                await page.waitForSelector(selector, { timeout: 3000 });
                 resultsLoaded = true;
                 logger.info(`Search results loaded with selector: ${selector}`);
                 break;
@@ -159,11 +141,9 @@ const searchForEnglishPosts = async (page: Page) => {
                 continue;
             }
         }
-        
         if (!resultsLoaded) {
             logger.warn("Search results may not have loaded properly");
         }
-        
         logger.info("Search for English posts completed");
         
     } catch (error) {
