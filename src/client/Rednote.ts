@@ -255,10 +255,10 @@ const interactWithPosts = async (page: Page, userActions: { like: boolean; colle
                 try {
                     const likeButton = await page.$('.like-wrapper');
                     if (likeButton) {
-                        const isLiked = await likeButton.evaluate((el: Element) => 
-                            (el as HTMLElement).classList.contains('liked') || 
-                            (el as HTMLElement).classList.contains('active')
-                        );
+                        const isLiked = await likeButton.evaluate((el: Element) => {
+                            const iconElement = (el as HTMLElement).querySelector('use');
+                            return iconElement && iconElement.getAttribute('xlink:href') === '#liked';
+                        });
                         
                         if (!isLiked) {
                             await likeButton.click();
