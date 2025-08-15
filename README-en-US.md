@@ -1,18 +1,19 @@
 ## Rednote AI Agent
 
-Rednote AI Agent is an AI-powered automation tool designed for **Rednote** to automate social media interactions such as posting, liking, and commenting. It leverages advanced AI models to generate engaging content, automate interactions, and manage Rednote accounts efficiently.
+Rednote AI Agent is an AI-powered automation tool designed for **Rednote** to automate social media interactions such as liking, bookmarking, and commenting. It leverages advanced AI models to generate engaging content, automate interactions, and manage Rednote accounts efficiently.
 
 ## Features
 
-- **Rednote Automation**: Automatically log in, post photos, like posts, and leave thoughtful comments.
-- **AI-Powered Content Generation**: Use Google Generative AI to create engaging captions and comments.
+- **Rednote Automation**: Automatically log in, search posts, like posts, bookmark posts, and leave insightful comments.
+- **AI-Powered Content Generation**: Use Google AI to create engaging titles and comments.
+- **Smart Interaction Selection**: Choose to execute liking, bookmarking, commenting, and other operations at startup, supporting multiple selections or browsing only.
 - **Proxy Support**: Use proxies to manage multiple accounts and avoid rate limits.
 - **Cookie Management**: Save and load cookies to maintain sessions across restarts.
+- **Detailed Logging**: Record information and operation results for each post, facilitating debugging and monitoring.
 
 **Upcoming Features:**
 
-- Posting.
-- Liking.
+- Posting new content.
 
 ## Installation
 
@@ -30,7 +31,7 @@ Rednote AI Agent is an AI-powered automation tool designed for **Rednote** to au
    ```
 
 3. **Set up environment variables**:
-   Rename the [.env.example](http://_vscodecontentref_/1) file to [.env](http://_vscodecontentref_/1) in the root directory and add your Rednote credentials. Refer to the [.env.example](http://_vscodecontentref_/2) file for the required variables.
+   Rename the `.env.example` file to `.env` in the root directory and add your Rednote credentials. Refer to the `.env.example` file for the required variables.
    ```dotenv # Rednote credentials
    MONGODB_URI= #MongoDB URI
    ```
@@ -38,7 +39,8 @@ Rednote AI Agent is an AI-powered automation tool designed for **Rednote** to au
 ## MongoDB Setup (Using Docker)
 
 1. **Install Docker**:
-   If you don't have Docker installed, download and install it from the [official website](https://www.docker.com/products/docker-desktop/)
+   If you don't have Docker installed, download and install it from the [official website](https://www.docker.com/products/docker-desktop/).
+
 2. **Run MongoDB using Docker Container**:
 
     **Option 1:**
@@ -49,11 +51,13 @@ Rednote AI Agent is an AI-powered automation tool designed for **Rednote** to au
       ```sh
       docker run -d -p 27017:27017 --name rednote-ai-mongodb -v mongodb_data:/data/db mongodb/mongodb-community-server:latest
       ```   
-      (Option 2: use this if you want to have like a permanent storage in you so your data won't be lost or remove if you stop or remove your Docker container)
+      (Option 2: Use this if you want permanent storage so your data won't be lost when you stop or remove the Docker container)
+
 3. **Modify the MONGODB_URI in the .env file**:
    ```dotenv
    MONGODB_URI=mongodb://localhost:27017/rednote-ai-agent
    ```
+
 4. **Verify the connection**:
    Open a new terminal and run the following command:
    ```sh
@@ -86,9 +90,37 @@ Rednote AI Agent is an AI-powered automation tool designed for **Rednote** to au
    npm start
    ```
 
+2. **Select operation type**:
+   After the program starts, you'll be prompted to select the operations to execute:
+   ```
+   === Select operations to execute ===
+   1. Like
+   2. Bookmark
+   3. Comment
+   Enter numbers (press Enter to browse only), separated by commas (e.g., 1,2,3):
+   Your choice:
+   ```
+   - Enter a single number (e.g., 1) to execute a single operation
+   - Enter multiple numbers (e.g., 1,2,3) to execute multiple operations
+   - Press Enter directly to only browse posts without executing any operations
+
+3. **Search posts with keywords**:
+   ```
+   Search posts with keywords (press Enter to skip search):
+   ```
+   - Enter keywords to search for posts
+   - Press Enter to skip search and browse homepage content
+
+4. **Automatic execution**:
+   The program will automatically execute the selected operations, including:
+   - Login verification (using saved cookies or QR code login)
+   - Post search (if keywords were entered)
+   - Browse posts and execute selected operations
+   - Record detailed operation logs
+
 ## Project Structure
 
-- **src/client**: Contains the main logic for interacting with Rednote platform.
+- **src/client**: Contains the main logic for interacting with the Rednote platform.
 - **src/config**: Configuration files, including the logger setup.
 - **src/utils**: Utility functions for handling errors, cookies, data saving, etc.
 - **src/Agent**: Contains the AI agent logic and training scripts.
@@ -98,15 +130,7 @@ Rednote AI Agent is an AI-powered automation tool designed for **Rednote** to au
 
 ## Logging
 
-The project uses a custom logger to log information, warnings, and errors. Logs are saved in the [logs](http://_vscodecontentref_/3) directory.
-
-## Error Handling
-
-Process-level error handlers are set up to catch unhandled promise rejections, uncaught exceptions, and process warnings. Errors are logged using the custom logger.
-
-## Contributing
-
-Contributions are welcome! Please fork the repository and submit a pull request with your changes.
+The project uses a custom logger to log information, warnings, and errors. Logs are saved in the `logs` directory.
 
 ## License
 
