@@ -80,10 +80,10 @@ export interface UserActions {
 export function getUserActions(): UserActions {
     try {
         console.log("\n=== 选择要执行的操作 ===");
-        console.log("1. 点赞帖子");
-        console.log("2. 收藏帖子");
-        console.log("3. 评论帖子");
-        console.log("输入数字，用逗号分隔（例如：1,2,3 或只输入 1，或直接按回车仅浏览）：");
+        console.log("1. 点赞");
+        console.log("2. 收藏");
+        console.log("3. 评论");
+        console.log("输入数字，用逗号分隔（例如：1,2,3，输入为空时默认仅浏览）：");
         
         const answer = readlineSync.question("你的选择：");
         const choices = answer.split(',').map(s => s.trim());
