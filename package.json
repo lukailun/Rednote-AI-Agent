@@ -38,7 +38,7 @@
     "puppeteer-extra-plugin-stealth": "^2.11.2",
     "readline-sync": "^1.4.10",
     "request": "^2.88.2",
-    "request-promise": "^4.2.6",
+    "request-promise": "^0.0.1",
     "textract": "^2.5.0",
     "typescript": "^5.8.3",
     "user-agents": "^1.1.559",
