@@ -4,7 +4,7 @@ Rednote AI Agent 是一个专为 **Rednote** 设计的 AI 驱动自动化工具�
 
 ## 功能特性
 
-- **Rednote 自动化**：自动登录、搜索帖子、点赞帖子、收藏帖子并留下有见地的评论。
+- **Rednote 自动化**：通过二维码安全登录、搜索帖子、点赞帖子、收藏帖子并留下有见地的评论。
 - **AI 驱动内容生成**：使用 Google AI 创建引人入胜的标题和评论。
 - **智能交互选择**：启动时可选择执行点赞、收藏、评论等操作，支持多选或仅浏览。
 - **代理支持**：使用代理管理多个账户并避免频率限制。
@@ -31,9 +31,12 @@ Rednote AI Agent 是一个专为 **Rednote** 设计的 AI 驱动自动化工具�
    ```
 
 3. **设置环境变量**：
-   将根目录中的 `.env.example` 文件重命名为 `.env` 并添加您的 Rednote 凭据。请参考 `.env.example` 文件了解所需的变量。
-   ```dotenv # Rednote 凭据
-   MONGODB_URI= #MongoDB URI
+   将根目录中的 `.env.example` 文件重命名为 `.env` 并配置必要的环境变量。请参考 `.env.example` 文件了解所需的变量。
+   
+   ```dotenv
+   MONGODB_URI = #MongoDB URI
+
+   GEMINI_API_KEY = #Gemini API Key
    ```
 
 ## MongoDB 设置（使用 Docker）
