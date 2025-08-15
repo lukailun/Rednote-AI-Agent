@@ -63,8 +63,8 @@ async function runRednote(searchKeyword: string, userActions: { like: boolean; c
 
     while (true) {
          await interactWithPosts(page, userActions);
-         logger.info("Iteration complete, waiting 30 seconds before refreshing...");
-         await delay(30000);
+         logger.info("Iteration complete, waiting 10 seconds before refreshing...");
+         await delay(10000);
          try {
              await page.reload({ waitUntil: "networkidle2" });
          } catch (e) {
