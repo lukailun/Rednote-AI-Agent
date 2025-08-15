@@ -30,7 +30,7 @@ app.use(cookieParser()); // Cookie parsing
 
 const runAgents = async () => {
     try {
-        await runRednote();
+        await runRednote('');
     } catch (error) {
         setup_HandleError(error, "Error running Rednote agent:");
     }
