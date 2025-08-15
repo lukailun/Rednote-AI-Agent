@@ -128,11 +128,11 @@ export function getUserActions(): UserActions {
 
 export function getSearchKeyword(): string {
     try {
-        const searchText = readlineSync.question("\n输入搜索关键词（按回车跳过搜索）：");
+        const searchText = readlineSync.question("\n搜索带有关键词的帖子（按回车跳过搜索）：");
         const searchKeyword = searchText.trim();
         return searchKeyword;
     } catch (error) {
-        console.error("输入搜索关键词时出错:", error);
+        console.error("搜索带有关键词的帖子时出错:", error);
         process.exit(1);
     }
 }
