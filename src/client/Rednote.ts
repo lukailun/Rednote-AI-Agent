@@ -21,6 +21,87 @@ const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 const XIAOHONGSHU_URL = "https://www.xiaohongshu.com/";
 const COOKIES_PATH = "./cookies/RednoteCookies.json";
 
+async function searchForEnglishPosts(page: any) {
+    try {
+        logger.info("Searching for English posts...");
+        
+        // Wait for search box to be available
+        await page.waitForSelector('input[placeholder*="搜索"], input[placeholder*="Search"], .search-input, #search-input', { timeout: 10000 });
+        
+        // Find and click the search input
+        const searchSelectors = [
+            'input[placeholder*="搜索"]',
+            'input[placeholder*="Search"]', 
+            '.search-input',
+            '#search-input',
+            'input[type="search"]',
+            '.search-box input'
+        ];
+        
+        let searchInput = null;
+        for (const selector of searchSelectors) {
+            try {
+                searchInput = await page.$(selector);
+                if (searchInput) {
+                    logger.info(`Found search input with selector: ${selector}`);
+                    break;
+                }
+            } catch (error) {
+                continue;
+            }
+        }
+        
+        if (!searchInput) {
+            logger.warn("Could not find search input, proceeding without search");
+            return;
+        }
+        
+        // Click on search input and type "English"
+        await searchInput.click();
+        await delay(1000);
+        await searchInput.type('English');
+        await delay(1000);
+        
+        // Press Enter to search
+        await page.keyboard.press('Enter');
+        logger.info("Search initiated for 'English' posts");
+        
+        // Wait for search results to load
+        await delay(3000);
+        
+        // Wait for search results container
+        const resultSelectors = [
+            '.search-result',
+            '.result-list',
+            '.note-list',
+            '.post-list',
+            '[data-index]'
+        ];
+        
+        let resultsLoaded = false;
+        for (const selector of resultSelectors) {
+            try {
+                await page.waitForSelector(selector, { timeout: 5000 });
+                resultsLoaded = true;
+                logger.info(`Search results loaded with selector: ${selector}`);
+                break;
+            } catch (error) {
+                continue;
+            }
+        }
+        
+        if (!resultsLoaded) {
+            logger.warn("Search results may not have loaded properly");
+        }
+        
+        logger.info("Search for English posts completed");
+        
+    } catch (error) {
+        logger.error("Error during search for English posts:", error);
+        // Continue execution even if search fails
+    }
+}
+
 async function runRednote() {
     const server = new Server({ port: 8000 });
     await server.listen();
@@ -55,6 +136,9 @@ async function runRednote() {
     }
 
     await page.screenshot({ path: "logged_in.png" });
+
+    // Search for English posts after login
+    await searchForEnglishPosts(page);
 
     await page.goto(XIAOHONGSHU_URL);
 

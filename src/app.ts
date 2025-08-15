@@ -19,7 +19,9 @@ const app: Application = express();
 // Connect to the database
 connectDB().catch(err => {
     logger.error('Failed to connect to MongoDB:', err);
-    process.exit(1);
+    logger.warn('Application will continue without database connection');
+    // Don't exit the process - allow the application to continue
+    // process.exit(1);
 });
 
 // Middleware setup
