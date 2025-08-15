@@ -56,8 +56,23 @@ async function runRednote() {
 
     await page.screenshot({ path: "logged_in.png" });
 
-    // Search for English posts after login
-    await searchForEnglishPosts(page);
+    const readline = require('readline');
+    const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+    });
+
+    const searchKeyword = await new Promise<string>((resolve) => {
+        rl.question('Enter search keyword (press Enter to skip search): ', (answer: string) => {
+            rl.close();
+            resolve(answer.trim());
+        });
+    });
+
+    if (searchKeyword) {
+        logger.info(`Using search keyword: "${searchKeyword}"`);
+        await searchForPosts(page, searchKeyword);
+    }
 
     while (true) {
          await interactWithPosts(page);
@@ -95,9 +110,9 @@ const loginWithQRCode = async (page: Page, browser: Browser) => {
     }
 }
 
-const searchForEnglishPosts = async (page: Page) => {
+const searchForPosts = async (page: Page, searchKeyword: string) => {
     try {
-        logger.info("Searching for English posts...");
+        logger.info(`Searching for posts with keyword: "${searchKeyword}"...`);
         await page.waitForSelector('.search-input, #search-input', { timeout: 5000 });
         const searchSelectors = ['.search-input', '#search-input'];
         
@@ -121,11 +136,11 @@ const searchForEnglishPosts = async (page: Page) => {
         
         await searchInput.click();
         await delay(1000);
-        await searchInput.type('English');
+        await searchInput.type(searchKeyword);
         await delay(1000);
         
         await page.keyboard.press('Enter');
-        logger.info("Search initiated for 'English' posts");
+        logger.info(`Search initiated for '${searchKeyword}' posts`);
         await delay(1000);
         
         const resultSelectors = ['.search-layout'];
@@ -144,10 +159,10 @@ const searchForEnglishPosts = async (page: Page) => {
         if (!resultsLoaded) {
             logger.warn("Search results may not have loaded properly");
         }
-        logger.info("Search for English posts completed");
+        logger.info(`Search for '${searchKeyword}' posts completed`);
         
     } catch (error) {
-        logger.error("Error during search for English posts:", error);
+        logger.error("Error during search for posts:", error);
     }
 }
 
