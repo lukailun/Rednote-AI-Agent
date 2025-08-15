@@ -70,6 +70,11 @@ export function chooseCharacter(): any {
     return characterConfig;
 }
 
+export function enterSearchText(): any {
+    const searchText = readlineSync.question("Enter the search text: ");
+    return searchText;
+}
+
 export function initAgent(): any {
     try {
         const character = chooseCharacter();
