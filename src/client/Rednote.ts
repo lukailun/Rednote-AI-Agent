@@ -22,9 +22,9 @@ const XIAOHONGSHU_URL = "https://www.xiaohongshu.com/";
 const COOKIES_PATH = "./cookies/RednoteCookies.json";
 
 async function runRednote(searchKeyword: string) {
-    const server = new Server({ port: 8000 });
+    const server = new Server({ port: 8001 });
     await server.listen();
-    const proxyUrl = `http://localhost:8000`;
+    const proxyUrl = `http://localhost:8001`;
     const browser = await puppeteer.launch({
         headless: false,
         args: [`--proxy-server=${proxyUrl}`],

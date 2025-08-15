@@ -3,9 +3,7 @@ import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import helmet from 'helmet'; // For securing HTTP headers
 
-import { runRednote } from './client/Rednote';
 import logger, { setupErrorHandlers } from './config/logger';
-import { setup_HandleError } from './utils';
 import { connectDB } from './config/db'; 
 
 // Set up process-level error handlers
@@ -27,17 +25,5 @@ app.use(helmet({ xssFilter: true, noSniff: true })); // Security headers
 app.use(express.json()); // JSON body parsing
 app.use(express.urlencoded({ extended: true, limit: '1kb' })); // URL-encoded data
 app.use(cookieParser()); // Cookie parsing
-
-const runAgents = async () => {
-    try {
-        await runRednote('');
-    } catch (error) {
-        setup_HandleError(error, "Error running Rednote agent:");
-    }
-};
-
-runAgents().catch(error => {
-    setup_HandleError(error, "Error running agents:");
-});
 
 export default app;
