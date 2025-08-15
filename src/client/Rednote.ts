@@ -251,6 +251,15 @@ const interactWithPosts = async (page: Page, userActions: { like: boolean; colle
                 }
             }
 
+            logger.info(`\n=== Post ${postIndex} Information ===`);
+            logger.info(`Title: ${title || 'No title'}`);
+            logger.info(`Content: ${content || 'No content'}`);
+            logger.info(`Media URLs: ${mediaUrls.length} items`);
+            mediaUrls.forEach((media, index) => {
+                logger.info(`  ${index + 1}. ${media.type}: ${media.url}`);
+            });
+            logger.info(`=== End Post ${postIndex} ===\n`);
+
             if (userActions.like) {
                 try {
                     await page.waitForSelector('.like-wrapper', { timeout: 5000 });
