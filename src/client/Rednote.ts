@@ -262,13 +262,9 @@ const interactWithPosts = async (page: Page, userActions: { like: boolean; colle
                         });
                         
                         if (!isLiked) {
-                            try {
-                                await likeButton.click();
-                                logger.info(`Liked post ${postIndex} by clicking wrapper`);
-                                await delay(1000);
-                            } catch (clickError) {
-                                logger.warn(`Post ${postIndex} - Click failed:`, clickError);
-                            }
+                            await likeButton.click();
+                            logger.info(`Liked post ${postIndex}`);
+                            await delay(1000);
                         } else {
                             logger.info(`Post ${postIndex} already liked`);
                         }
@@ -283,7 +279,6 @@ const interactWithPosts = async (page: Page, userActions: { like: boolean; colle
                     await page.waitForSelector('.collect-wrapper', { timeout: 5000 });
                     const collectButton = await page.$('.collect-wrapper');
                     if (collectButton) {
-                        // Check if already collected by looking at the icon reference
                         const isCollected = await collectButton.evaluate((el: Element) => {
                             const iconElement = (el as HTMLElement).querySelector('use');
                             return iconElement && iconElement.getAttribute('xlink:href') === '#collected';
