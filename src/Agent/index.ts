@@ -70,18 +70,18 @@ export function chooseCharacter(): any {
     return characterConfig;
 }
 
-export function enterSearchText(): any {
-    const searchText = readlineSync.question("Enter the search text: ");
-    return searchText;
+export function enterSearchText(): string {
+    const searchText = readlineSync.question("Enter search keyword (press Enter to skip search): ");
+    return searchText.trim();
 }
 
-export function initAgent(): any {
+export function initAgent(): { searchKeyword: string } {
     try {
-        const character = chooseCharacter();
-        console.log("Character selected:", character);
-        return character;
+        const searchKeyword = enterSearchText();
+        console.log("Search keyword entered:", searchKeyword);
+        return { searchKeyword };
     } catch (error) {
-        console.error("Error selecting character:", error);
+        console.error("Error entering search keyword:", error);
         process.exit(1);
     }
 }
