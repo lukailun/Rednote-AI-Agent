@@ -6,6 +6,7 @@ import { RednoteCommentSchema } from "./schema";
 import fs from "fs";
 import path from "path";
 import * as readlineSync from "readline-sync";
+import { runRednote } from "../client/Rednote";
 
 export async function runAgent(schema: RednoteCommentSchema, prompt: string): Promise<any> {
     if (!geminiApiKey) {
@@ -70,24 +71,29 @@ export function chooseCharacter(): any {
     return characterConfig;
 }
 
-export function enterSearchText(): string {
-    const searchText = readlineSync.question("Enter search keyword (press Enter to skip search): ");
-    return searchText.trim();
-}
-
-export function initAgent(): { searchKeyword: string } {
+export function getSearchKeyword(): string {
     try {
-        const searchKeyword = enterSearchText();
-        console.log("Search keyword entered:", searchKeyword);
-        return { searchKeyword };
+        const searchText = readlineSync.question("Enter search keyword (press Enter to skip search): ");
+        const searchKeyword = searchText.trim();
+        return searchKeyword;
     } catch (error) {
         console.error("Error entering search keyword:", error);
         process.exit(1);
     }
 }
 
+export async function startRednoteAgent(): Promise<void> {
+    try {
+        const searchKeyword = getSearchKeyword();
+        await runRednote(searchKeyword);
+    } catch (error) {
+        console.error("Error starting Rednote Agent:", error);
+        process.exit(1);
+    }
+}
+
 if (require.main === module) {
     (() => {
-        initAgent();
+        startRednoteAgent();
     })();
 }

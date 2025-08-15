@@ -21,7 +21,7 @@ const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 const XIAOHONGSHU_URL = "https://www.xiaohongshu.com/";
 const COOKIES_PATH = "./cookies/RednoteCookies.json";
 
-async function runRednote() {
+async function runRednote(searchKeyword: string) {
     const server = new Server({ port: 8000 });
     await server.listen();
     const proxyUrl = `http://localhost:8000`;
@@ -56,19 +56,7 @@ async function runRednote() {
 
     await page.screenshot({ path: "logged_in.png" });
 
-    const readline = require('readline');
-    const rl = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout
-    });
-
-    const searchKeyword = await new Promise<string>((resolve) => {
-        rl.question('Enter search keyword (press Enter to skip search): ', (answer: string) => {
-            rl.close();
-            resolve(answer.trim());
-        });
-    });
-
+    // Use search keyword from program startup if provided
     if (searchKeyword) {
         logger.info(`Using search keyword: "${searchKeyword}"`);
         await searchForPosts(page, searchKeyword);
