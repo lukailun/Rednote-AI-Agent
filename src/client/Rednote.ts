@@ -21,7 +21,7 @@ const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 const XIAOHONGSHU_URL = "https://www.xiaohongshu.com/";
 const COOKIES_PATH = "./cookies/RednoteCookies.json";
 
-async function runRednote(searchKeyword: string) {
+async function runRednote(searchKeyword: string, userActions: { like: boolean; collect: boolean; chat: boolean }) {
     const server = new Server({ port: 8001 });
     await server.listen();
     const proxyUrl = `http://localhost:8001`;
@@ -63,7 +63,7 @@ async function runRednote(searchKeyword: string) {
     }
 
     while (true) {
-         await interactWithPosts(page);
+         await interactWithPosts(page, userActions);
          logger.info("Iteration complete, waiting 30 seconds before refreshing...");
          await delay(30000);
          try {
@@ -154,7 +154,7 @@ const searchForPosts = async (page: Page, searchKeyword: string) => {
     }
 }
 
-const interactWithPosts = async (page: Page) => {
+const interactWithPosts = async (page: Page, userActions: { like: boolean; collect: boolean; chat: boolean }) => {
     let postIndex = 0;
     const maxPosts = 50;
 
@@ -252,26 +252,77 @@ const interactWithPosts = async (page: Page) => {
                 }
             }
 
-            await page.waitForSelector('#content-textarea', { timeout: 5000 });
-            const commentBoxSelector = '#content-textarea';
-            const commentBox = await page.$(commentBoxSelector);
-            if (commentBox) {
-                await commentBox.click();
-                const mediaDescription = mediaUrls.map(media => 
-                    `${media.type === 'video' ? 'Video' : 'Image'}: ${media.url}`
-                ).join('\n');
-                const prompt = generateCommentPrompt(title, content, mediaDescription);
-                logger.info(`Prompt: ${prompt}`);
-                const schema = getRednoteCommentSchema();
-                const result = await runAgent(schema, prompt);
-                const comment = result[0]?.comment;
-                await commentBox.type(comment);
+            if (userActions.like) {
+                try {
+                    const likeButton = await page.$('.like-button, .like-btn, [data-action="like"]');
+                    if (likeButton) {
+                        const isLiked = await likeButton.evaluate((el: Element) => 
+                            (el as HTMLElement).classList.contains('liked') || 
+                            (el as HTMLElement).classList.contains('active')
+                        );
+                        
+                        if (!isLiked) {
+                            await likeButton.click();
+                            logger.info(`Liked post ${postIndex}`);
+                            await delay(1000);
+                        } else {
+                            logger.info(`Post ${postIndex} already liked`);
+                        }
+                    }
+                } catch (error) {
+                    logger.warn(`Failed to like post ${postIndex}:`, error);
+                }
+            }
 
-                await delay(3000);
-                const sendButton = await page.$('.btn.submit:not([disabled])');
-                if (sendButton) {
-                    await sendButton.click();
-                    logger.info(`Comment posted on post ${postIndex}: ${comment}.`);
+            if (userActions.collect) {
+                try {
+                    const favoriteButton = await page.$('.favorite-button, .favorite-btn, [data-action="favorite"], .collect-btn');
+                    if (favoriteButton) {
+                        const isFavorited = await favoriteButton.evaluate((el: Element) => 
+                            (el as HTMLElement).classList.contains('favorited') || 
+                            (el as HTMLElement).classList.contains('active') ||
+                            (el as HTMLElement).classList.contains('collected')
+                        );
+                        
+                        if (!isFavorited) {
+                            await favoriteButton.click();
+                            logger.info(`Favorited post ${postIndex}`);
+                            await delay(1000);
+                        } else {
+                            logger.info(`Post ${postIndex} already favorited`);
+                        }
+                    }
+                } catch (error) {
+                    logger.warn(`Failed to favorite post ${postIndex}:`, error);
+                }
+            }
+
+            if (userActions.chat) {
+                try {
+                    await page.waitForSelector('#content-textarea', { timeout: 5000 });
+                    const commentBoxSelector = '#content-textarea';
+                    const commentBox = await page.$(commentBoxSelector);
+                    if (commentBox) {
+                        await commentBox.click();
+                        const mediaDescription = mediaUrls.map(media => 
+                            `${media.type === 'video' ? 'Video' : 'Image'}: ${media.url}`
+                        ).join('\n');
+                        const prompt = generateCommentPrompt(title, content, mediaDescription);
+                        logger.info(`Prompt: ${prompt}`);
+                        const schema = getRednoteCommentSchema();
+                        const result = await runAgent(schema, prompt);
+                        const comment = result[0]?.comment;
+                        await commentBox.type(comment);
+
+                        await delay(3000);
+                        const sendButton = await page.$('.btn.submit:not([disabled])');
+                        if (sendButton) {
+                            await sendButton.click();
+                            logger.info(`Comment posted on post ${postIndex}: ${comment}.`);
+                        }
+                    }
+                } catch (error) {
+                    logger.warn(`Failed to comment on post ${postIndex}:`, error);
                 }
             }
 

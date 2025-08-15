@@ -71,9 +71,66 @@ export function chooseCharacter(): any {
     return characterConfig;
 }
 
+export interface UserActions {
+    like: boolean;
+    collect: boolean;
+    chat: boolean;
+}
+
+export function getUserActions(): UserActions {
+    try {
+        console.log("\n=== Select Actions to Perform ===");
+        console.log("1. Like posts");
+        console.log("2. Favorite posts");
+        console.log("3. Comment on posts");
+        console.log("Enter numbers separated by commas (e.g., 1,2,3 or just 1): ");
+        
+        const answer = readlineSync.question("Your choice: ");
+        const choices = answer.split(',').map(s => s.trim());
+        
+        const actions: UserActions = {
+            like: false,
+            collect: false,
+            chat: false
+        };
+        
+        choices.forEach(choice => {
+            switch(choice) {
+                case '1':
+                    actions.like = true;
+                    break;
+                case '2':
+                    actions.collect = true;
+                    break;
+                case '3':
+                    actions.chat = true;
+                    break;
+                default:
+                    console.log(`Invalid choice: ${choice}, ignoring...`);
+            }
+        });
+        
+        // If no valid choices, default to chat only
+        if (!actions.like && !actions.collect && !actions.chat) {
+            console.log("No valid actions selected, defaulting to chat only");
+            actions.chat = true;
+        }
+        
+        console.log("\nSelected actions:");
+        if (actions.like) console.log("✓ Like posts");
+        if (actions.collect) console.log("✓ Collect posts");
+        if (actions.chat) console.log("✓ Chat on posts");
+        
+        return actions;
+    } catch (error) {
+        console.error("Error getting user actions:", error);
+        process.exit(1);
+    }
+}
+
 export function getSearchKeyword(): string {
     try {
-        const searchText = readlineSync.question("Enter search keyword (press Enter to skip search): ");
+        const searchText = readlineSync.question("\nEnter search keyword (press Enter to skip search): ");
         const searchKeyword = searchText.trim();
         return searchKeyword;
     } catch (error) {
@@ -84,8 +141,9 @@ export function getSearchKeyword(): string {
 
 export async function startRednoteAgent(): Promise<void> {
     try {
+        const userActions = getUserActions();
         const searchKeyword = getSearchKeyword();
-        await runRednote(searchKeyword);
+        await runRednote(searchKeyword, userActions);
     } catch (error) {
         console.error("Error starting Rednote Agent:", error);
         process.exit(1);
