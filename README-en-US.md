@@ -4,7 +4,7 @@ Rednote AI Agent is an AI-powered automation tool designed for **Rednote** to au
 
 ## Features
 
-- **Rednote Automation**: Automatically log in, search posts, like posts, bookmark posts, and leave insightful comments.
+- **Rednote Automation**: Securely log in via QR code, search posts, like posts, bookmark posts, and leave insightful comments.
 - **AI-Powered Content Generation**: Use Google AI to create engaging titles and comments.
 - **Smart Interaction Selection**: Choose to execute liking, bookmarking, commenting, and other operations at startup, supporting multiple selections or browsing only.
 - **Proxy Support**: Use proxies to manage multiple accounts and avoid rate limits.
@@ -31,9 +31,11 @@ Rednote AI Agent is an AI-powered automation tool designed for **Rednote** to au
    ```
 
 3. **Set up environment variables**:
-   Rename the `.env.example` file to `.env` in the root directory and add your Rednote credentials. Refer to the `.env.example` file for the required variables.
-   ```dotenv # Rednote credentials
-   MONGODB_URI= #MongoDB URI
+   Rename the `.env.example` file to `.env` in the root directory and configure the necessary environment variables. Refer to the `.env.example` file for the required variables.
+   ```dotenv
+   MONGODB_URI = #MongoDB URI
+
+   GEMINI_API_KEY = #Gemini API Key
    ```
 
 ## MongoDB Setup (Using Docker)
@@ -55,7 +57,7 @@ Rednote AI Agent is an AI-powered automation tool designed for **Rednote** to au
 
 3. **Modify the MONGODB_URI in the .env file**:
    ```dotenv
-   MONGODB_URI=mongodb://localhost:27017/rednote-ai-agent
+   MONGODB_URI = mongodb://localhost:27017/rednote-ai-agent
    ```
 
 4. **Verify the connection**:
