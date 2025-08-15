@@ -2,13 +2,13 @@ import dotenv from "dotenv";
 import logger from "./config/logger";
 import { shutdown } from "./services";
 import app from "./app";
-import { initAgent } from "./Agent/index";
+import { startRednoteAgent } from "./Agent/index";
 
 dotenv.config();
 
 async function startServer() {
   try {
-    await initAgent();
+    await startRednoteAgent();
   } catch (err) {
     logger.error("Error during agent initialization:", err);
     process.exit(1);
