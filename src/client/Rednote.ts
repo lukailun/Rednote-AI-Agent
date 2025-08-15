@@ -253,11 +253,15 @@ const interactWithPosts = async (page: Page, userActions: { like: boolean; colle
 
             if (userActions.like) {
                 try {
-                    const likeButton = await page.$('.like-wrapper');
+                    const likeButton = await page.$('.like-wrapper .like-icon');
                     if (likeButton) {
                         const isLiked = await likeButton.evaluate((el: Element) => {
-                            const iconElement = (el as HTMLElement).querySelector('use');
-                            return iconElement && iconElement.getAttribute('xlink:href') === '#liked';
+                            const wrapper = (el as HTMLElement).closest('.like-wrapper');
+                            if (wrapper) {
+                                const iconElement = wrapper.querySelector('use');
+                                return iconElement && iconElement.getAttribute('xlink:href') === '#liked';
+                            }
+                            return false;
                         });
                         
                         if (!isLiked) {
