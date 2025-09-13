@@ -15,7 +15,7 @@
   "description": "Riona-AI-Agent is an AI-powered automation tool designed specifically for Rednote (Xiaohongshu) platform.",
   "dependencies": {
     "@google/generative-ai": "^0.21.0",
-    "axios": "^1.8.2",
+    "axios": "^1.12.0",
     "cookie-parser": "^1.4.7",
     "copyfiles": "^2.4.1",
     "cron": "^3.5.0",
